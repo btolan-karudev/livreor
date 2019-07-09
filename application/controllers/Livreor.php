@@ -76,7 +76,34 @@ class Livreor extends CI_Controller
 
     public function ecrire()
     {
-        //    La page qui permet d'écrire un commentaire.
+        //	Chargement des ressources pour tout le contrôleur
+        $this->load->model('livreor_model', 'livreorManager');
+//        $this->load->library('form_validation');
+
+        //	Cette méthode permet de changer les délimiteurs par défaut des messages d'erreur (<p></p>).
+        $this->form_validation->set_error_delimiters('<p class="form_erreur">', '</p>');
+
+        //	Mise en place des règles de validation du formulaire
+        //	Nombre de caractères : [3,25] pour le pseudo et [3,3000] pour le commentaire
+        //	Uniquement des caractères alphanumériques, des tirets et des underscores pour le pseudo
+        $this->form_validation->set_rules('pseudo',  '"Pseudo"',  'trim|required|min_length[3]|max_length[25]|alpha_dash');
+        $this->form_validation->set_rules('contenu', '"Contenu"', 'trim|required|min_length[3]|max_length[3000]');
+
+        if($this->form_validation->run())
+        {
+            //	Nous disposons d'un pseudo et d'un commentaire sous une bonne forme
+
+            //	Sauvegarde du commentaire dans la base de données
+            $this->livreorManager->ajouter_commentaire($this->input->post('pseudo'),
+                $this->input->post('contenu'));
+
+            //	Affichage de la confirmation
+            $this->load->view('livreor/confirmation');
+        }
+        else
+        {
+            $this->load->view('livreor/ecrire_commentaire');
+        }
     }
 }
 
