@@ -14,8 +14,10 @@ class Livreor extends CI_Controller
 
     public function index($g_nb_commentaire = 1)
     {
-
+        $this->benchmark->mark('requete1_start');
         $this->voir($g_nb_commentaire);
+        $this->benchmark->mark('requete1_end');
+        $this->output->enable_profiler(true);
     }
 
 // ------------------------------------------------------------------------

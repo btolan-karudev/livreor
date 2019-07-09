@@ -35,6 +35,7 @@ class Livreor_model extends CI_Model
             ->limit($nb, $debut)
             ->get()
             ->result();
+
     }
 }
 
